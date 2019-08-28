@@ -41,11 +41,7 @@ public class PropsUtil {
     }
 
     private static String getString(Properties properties, String key, String defaultValue) {
-        String value = defaultValue;
-        if (properties.containsKey(key)) {
-            value = properties.getProperty(key);
-        }
-        return value;
+        return isPropertiesContainsKey(properties, key) ? String.valueOf(getPropertiesValue(properties, key)) : defaultValue;
     }
 
     public static int getInt(Properties properties, String key) {
@@ -53,11 +49,7 @@ public class PropsUtil {
     }
 
     private static int getInt(Properties properties, String key, int defaultValue) {
-        int value = defaultValue;
-        if (properties.containsKey(key)) {
-            value = Integer.parseInt(properties.getProperty(key));
-        }
-        return value;
+        return isPropertiesContainsKey(properties, key) ? Integer.parseInt(getPropertiesValue(properties, key)) : defaultValue;
     }
 
     public static boolean getBoolean(Properties properties, String key) {
@@ -65,10 +57,14 @@ public class PropsUtil {
     }
 
     private static boolean getBoolean(Properties properties, String key, boolean defaultValue) {
-        boolean value = defaultValue;
-        if (properties.containsKey(key)) {
-            value = Boolean.parseBoolean(properties.getProperty(key));
-        }
-        return value;
+        return isPropertiesContainsKey(properties, key) ? Boolean.parseBoolean(getPropertiesValue(properties, key)) : defaultValue;
+    }
+
+    private static boolean isPropertiesContainsKey(Properties properties, String key) {
+        return properties.containsKey(key);
+    }
+
+    private static String getPropertiesValue(Properties properties, String key) {
+        return properties.getProperty(key);
     }
 }
