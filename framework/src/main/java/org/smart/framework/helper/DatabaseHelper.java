@@ -1,6 +1,7 @@
 package org.smart.framework.helper;
 
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -8,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.smart.framework.util.PropsUtil;
 
+import javax.sql.DataSource;
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,44 +22,48 @@ import java.util.Properties;
 public class DatabaseHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHelper.class);
+    private static final ThreadLocal<Connection> CONNECTION_HOLDER;
     private static final QueryRunner QUERY_RUNNER;
+    private static final BasicDataSource DATA_SOURCE;
 
-    private static final String DRIVE;
-    private static final String URL;
-    private static final String USERNAME;
-    private static final String PASSWORD;
 
     static {
-        Properties properties = PropsUtil.loadProps("config.properties");
+        CONNECTION_HOLDER = new ThreadLocal<>();
         QUERY_RUNNER = new QueryRunner();
-        DRIVE = properties.getProperty("jdbc.driver");
-        URL = properties.getProperty("jdbc.url");
-        USERNAME = properties.getProperty("jdbc.username");
-        PASSWORD = properties.getProperty("jdbc.password");
+        DATA_SOURCE = new BasicDataSource();
+        DATA_SOURCE.setDriverClassName(ConfigHelper.getDriver());
+        DATA_SOURCE.setUrl(ConfigHelper.getUrl());
+        DATA_SOURCE.setUsername(ConfigHelper.getUsername());
+        DATA_SOURCE.setPassword(ConfigHelper.getPassword());
+    }
 
-        try {
-            Class.forName(DRIVE);
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("can not load jdbc driver", e);
-        }
+    public static DataSource getDataSource() {
+        return DATA_SOURCE;
     }
 
     public static Connection getConnection() {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException e) {
-            LOGGER.error("get connection fail", e);
+        Connection connection = CONNECTION_HOLDER.get();
+        if (connection == null) {
+            try {
+                connection = DATA_SOURCE.getConnection();
+            } catch (SQLException e) {
+                LOGGER.error("get connection fail", e);
+            } finally {
+                CONNECTION_HOLDER.set(connection);
+            }
         }
         return connection;
     }
 
-    public static void closeConnection(Connection connection) {
+    public static void closeConnection() {
+        Connection connection = CONNECTION_HOLDER.get();
         if (connection != null) {
             try {
                 connection.close();
             } catch (SQLException e) {
                 LOGGER.error("close connection fail", e);
+            } finally {
+                CONNECTION_HOLDER.remove();
             }
         }
     }
@@ -69,6 +76,8 @@ public class DatabaseHelper {
         } catch (SQLException e) {
             LOGGER.error("query entity failure", e);
             throw new RuntimeException();
+        } finally {
+            closeConnection();
         }
         return entity;
     }
@@ -81,11 +90,13 @@ public class DatabaseHelper {
         } catch (SQLException e) {
             LOGGER.info("query entities failure");
             throw new RuntimeException();
+        } finally {
+            closeConnection();
         }
         return entities;
     }
 
-    public static int update(String sql, Object... params) {
+    private static int update(String sql, Object... params) {
         int rows;
         try {
             Connection connection = getConnection();
@@ -93,6 +104,8 @@ public class DatabaseHelper {
         } catch (SQLException e) {
             LOGGER.error("execute update failure", e);
             throw new RuntimeException(e);
+        } finally {
+            closeConnection();
         }
         return rows;
     }

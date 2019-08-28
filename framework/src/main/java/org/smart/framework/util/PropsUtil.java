@@ -16,7 +16,8 @@ public class PropsUtil {
         Properties properties = null;
         InputStream is = null;
         try {
-            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+            is = ClassUtil.getClassLoader().getResourceAsStream(fileName);
+
             if (is == null) {
                 throw new FileNotFoundException(fileName + "is not exist");
             }
