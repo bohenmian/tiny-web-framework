@@ -13,7 +13,7 @@ public class BeanHelper {
         ClassHelper.getBeanClassSet().forEach(cls -> BEAN_MAP.put(cls, ReflectionUtil.newInstance(cls)));
     }
 
-    public Map<Class<?>, Object> getBeanMap() {
+    public static Map<Class<?>, Object> getBeanMap() {
         return BEAN_MAP;
     }
 
