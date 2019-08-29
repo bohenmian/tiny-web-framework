@@ -19,7 +19,7 @@ public class Param {
         return paramMap;
     }
 
-    public boolean isMapEmpty(Map<String, Object> paramMap) {
+    public boolean isMapEmpty() {
         return MapUtils.isEmpty(paramMap);
     }
 }
