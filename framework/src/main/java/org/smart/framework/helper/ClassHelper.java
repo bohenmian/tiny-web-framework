@@ -20,13 +20,13 @@ public class ClassHelper {
         return CLASS_SET;
     }
 
-    private static Set<Class<?>> getServiceClassSet() {
+    public static Set<Class<?>> getServiceClassSet() {
         return CLASS_SET.stream()
                 .filter(cls -> cls.isAnnotationPresent(Service.class))
                 .collect(Collectors.toSet());
     }
 
-    private static Set<Class<?>> getControllerClassSet() {
+    public static Set<Class<?>> getControllerClassSet() {
         return CLASS_SET.stream()
                 .filter(cls -> cls.isAnnotationPresent(Controller.class))
                 .collect(Collectors.toSet());
