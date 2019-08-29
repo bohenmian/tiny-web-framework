@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
@@ -16,9 +17,9 @@ import java.util.jar.JarFile;
 
 public final class ClassUtil {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(ClassUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtil.class);
 
-    public static ClassLoader getClassLoader() {
+    static ClassLoader getClassLoader() {
         return Thread.currentThread().getContextClassLoader();
     }
 
@@ -96,11 +97,20 @@ public final class ClassUtil {
                 addClass(classSet, subPackagePath, subPackageName);
             }
         }
-
     }
 
     private static void doAddClass(Set<Class<?>> classSet, String className) {
         Class<?> cls = loadClass(className, false);
         classSet.add(cls);
+    }
+
+    public static void setField(Object obj, Field field, Object value) {
+        try {
+            field.setAccessible(true);
+            field.set(obj, value);
+        } catch (Exception e) {
+            LOGGER.error("set field failure", e);
+            throw new RuntimeException();
+        }
     }
 }

@@ -7,17 +7,13 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.smart.framework.util.PropsUtil;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 public class DatabaseHelper {
 
@@ -41,7 +37,7 @@ public class DatabaseHelper {
         return DATA_SOURCE;
     }
 
-    public static Connection getConnection() {
+    private static Connection getConnection() {
         Connection connection = CONNECTION_HOLDER.get();
         if (connection == null) {
             try {
@@ -55,7 +51,7 @@ public class DatabaseHelper {
         return connection;
     }
 
-    public static void closeConnection() {
+    private static void closeConnection() {
         Connection connection = CONNECTION_HOLDER.get();
         if (connection != null) {
             try {
@@ -142,8 +138,7 @@ public class DatabaseHelper {
         }
         sql += columns.substring(0, columns.lastIndexOf(", ")) + " WHERE id = ?";
 
-        List<Object> paramList = new ArrayList<Object>();
-        paramList.addAll(fieldMap.values());
+        List<Object> paramList = new ArrayList<>(fieldMap.values());
         paramList.add(id);
         Object[] params = paramList.toArray();
 

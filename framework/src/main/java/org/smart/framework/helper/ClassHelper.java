@@ -13,30 +13,28 @@ public class ClassHelper {
     private static final Set<Class<?>> CLASS_SET;
 
     static {
-        String basePackage = ConfigHelper.getBasePackage();
-        CLASS_SET = ClassUtil.getClassSet(basePackage);
+        CLASS_SET = ClassUtil.getClassSet(ConfigHelper.getBasePackage());
     }
 
     public static Set<Class<?>> getClassSet() {
         return CLASS_SET;
     }
 
-    public static Set<Class<?>> getServiceClassSet() {
+    private static Set<Class<?>> getServiceClassSet() {
         return CLASS_SET.stream()
                 .filter(cls -> cls.isAnnotationPresent(Service.class))
                 .collect(Collectors.toSet());
     }
 
-    public static Set<Class<?>> getControllerClassSet() {
+    private static Set<Class<?>> getControllerClassSet() {
         return CLASS_SET.stream()
                 .filter(cls -> cls.isAnnotationPresent(Controller.class))
                 .collect(Collectors.toSet());
     }
 
     public static Set<Class<?>> getBeanClassSet() {
-        Set<Class<?>> classSet = new HashSet<>();
-        classSet.addAll(getControllerClassSet());
-        classSet.addAll(getServiceClassSet());
-        return classSet;
+        return CLASS_SET.stream()
+                .filter(cls -> cls.isAnnotationPresent(Service.class) || cls.isAnnotationPresent(Controller.class))
+                .collect(Collectors.toSet());
     }
 }
