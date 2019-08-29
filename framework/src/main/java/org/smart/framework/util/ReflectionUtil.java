@@ -14,7 +14,7 @@ public class ReflectionUtil {
         return newInstance(cls);
     }
 
-    private static Object newInstance(Class<?> cls) {
+    public static Object newInstance(Class<?> cls) {
         Object instance;
         try {
             instance = cls.newInstance();
