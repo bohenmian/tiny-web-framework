@@ -17,7 +17,6 @@ public class PropsUtil {
         InputStream is = null;
         try {
             is = ClassUtil.getClassLoader().getResourceAsStream(fileName);
-
             if (is == null) {
                 throw new FileNotFoundException(fileName + "is not exist");
             }
@@ -41,7 +40,7 @@ public class PropsUtil {
         return getString(properties, key, "");
     }
 
-    private static String getString(Properties properties, String key, String defaultValue) {
+    public static String getString(Properties properties, String key, String defaultValue) {
         return isPropertiesContainsKey(properties, key) ? String.valueOf(getPropertiesValue(properties, key)) : defaultValue;
     }
 

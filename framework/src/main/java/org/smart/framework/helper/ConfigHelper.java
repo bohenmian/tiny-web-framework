@@ -25,4 +25,15 @@ public final class ConfigHelper {
         return PropsUtil.getString(CONF_FILE, ConfigConstant.JDBC_PASSWORD);
     }
 
+    public static String getBasePackage() {
+        return PropsUtil.getString(CONF_FILE, ConfigConstant.APP_BASE_PACKAGE);
+    }
+
+    public static String getJspPath() {
+        return PropsUtil.getString(CONF_FILE, ConfigConstant.APP_JSP_PATH, "/WEB-INF/view");
+    }
+
+    public static String getAssetPath() {
+        return PropsUtil.getString(CONF_FILE, ConfigConstant.APP_ASSET_PATH, "/asset/");
+    }
 }
