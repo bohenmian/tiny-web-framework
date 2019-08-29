@@ -18,8 +18,8 @@ public class ControllerHelper {
     static {
         Set<Class<?>> controllerClassSet = ClassHelper.getControllerClassSet();
         if (CollectionUtils.isNotEmpty(controllerClassSet)) {
-            for (Class<?> collectionClass : controllerClassSet) {
-                Method[] methods = collectionClass.getDeclaredMethods();
+            for (Class<?> controllerClass : controllerClassSet) {
+                Method[] methods = controllerClass.getDeclaredMethods();
                 if (ArrayUtils.isNotEmpty(methods)) {
                     for (Method method : methods) {
                         if (method.isAnnotationPresent(RequestMapping.class)) {
@@ -27,7 +27,7 @@ public class ControllerHelper {
                             String requestPath = requestMapping.value();
                             String requestMethod = requestMapping.method().name();
                             Request request = new Request(requestPath, requestMethod);
-                            Handler handler = new Handler(collectionClass, method);
+                            Handler handler = new Handler(controllerClass, method);
                             HANDLER_MAP.put(request, handler);
                         }
                     }
