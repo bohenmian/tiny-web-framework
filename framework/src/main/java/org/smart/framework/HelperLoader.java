@@ -12,7 +12,8 @@ public final class HelperLoader {
                 ClassHelper.class,
                 BeanHelper.class,
                 IocHelper.class,
-                ControllerHelper.class
+                ControllerHelper.class,
+                AopHelper.class
         };
         Arrays.stream(classList).forEach(cls -> ClassUtil.loadClass(cls.getName()));
     }

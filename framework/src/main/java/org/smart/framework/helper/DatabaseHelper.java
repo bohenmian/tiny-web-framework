@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DatabaseHelper {
+public final class DatabaseHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHelper.class);
     private static final ThreadLocal<Connection> CONNECTION_HOLDER;

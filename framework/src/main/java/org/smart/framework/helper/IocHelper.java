@@ -8,7 +8,7 @@ import org.smart.framework.util.ReflectionUtil;
 import java.util.Arrays;
 import java.util.Map;
 
-public class IocHelper {
+public final class IocHelper {
 
     static {
         Map<Class<?>, Object> beanMap = BeanHelper.getBeanMap();

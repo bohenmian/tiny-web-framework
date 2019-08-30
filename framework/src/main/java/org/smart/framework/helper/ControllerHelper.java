@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class ControllerHelper {
+public final class ControllerHelper {
 
     private static final Map<Request, Handler> HANDLER_MAP = new HashMap<>();
 

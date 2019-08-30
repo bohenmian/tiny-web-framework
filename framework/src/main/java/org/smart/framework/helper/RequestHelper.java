@@ -7,7 +7,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestHelper {
+public final class RequestHelper {
 
     public static Param createParam(HttpServletRequest request) {
         Map<String, Object> paramMap = new HashMap<>();

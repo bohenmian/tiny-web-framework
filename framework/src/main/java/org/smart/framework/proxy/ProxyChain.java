@@ -31,16 +31,8 @@ public class ProxyChain {
         return targetClass;
     }
 
-    public Object getTargetObject() {
-        return targetObject;
-    }
-
     public Method getTargetMethod() {
         return targetMethod;
-    }
-
-    public MethodProxy getMethodProxy() {
-        return methodProxy;
     }
 
     public Object[] getMethodParams() {
@@ -50,9 +42,9 @@ public class ProxyChain {
     public Object doProxyChain() throws Throwable {
         Object methodResult;
         if (proxyIndex < proxyList.size()) {
-            methodResult = proxyList.get(proxyIndex).doProxy(this);
+            methodResult = proxyList.get(proxyIndex++).doProxy(this);
         } else {
-            methodResult = methodProxy.invokeSuper(targetClass, methodParams);
+            methodResult = methodProxy.invokeSuper(targetObject, methodParams);
         }
         return methodResult;
     }

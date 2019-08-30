@@ -47,7 +47,7 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String requestMethod = request.getMethod().toLowerCase();
+        String requestMethod = request.getMethod().toUpperCase();
         String requestPath = request.getPathInfo();
         String[] splits = requestPath.split("/");
         if (splits.length > 2) {

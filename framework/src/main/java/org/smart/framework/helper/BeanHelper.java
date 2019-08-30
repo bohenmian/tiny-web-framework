@@ -5,7 +5,7 @@ import org.smart.framework.util.ReflectionUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BeanHelper {
+public final class BeanHelper {
 
     // BEAN_MAP是一个容器,记录项目所有的bean实例
     private static final Map<Class<?>, Object> BEAN_MAP = new HashMap<>();

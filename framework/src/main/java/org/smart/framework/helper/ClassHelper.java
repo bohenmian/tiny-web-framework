@@ -8,7 +8,7 @@ import java.lang.annotation.Annotation;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ClassHelper {
+public final class ClassHelper {
 
     private static final Set<Class<?>> CLASS_SET;
 
