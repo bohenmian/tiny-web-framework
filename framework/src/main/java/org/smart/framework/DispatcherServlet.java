@@ -29,7 +29,7 @@ import java.util.Map;
 public class DispatcherServlet extends HttpServlet {
 
     @Override
-    public void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) {
 
         HelperLoader.init();
 
@@ -68,7 +68,7 @@ public class DispatcherServlet extends HttpServlet {
             if (result instanceof View) {
                 handleViewResult((View) result, request, response);
             } else if (result instanceof Data) {
-                handleDataResult((View) result, response);
+                handleDataResult((Data) result, response);
             }
         }
     }
@@ -80,13 +80,13 @@ public class DispatcherServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + path);
             } else {
                 Map<String, Object> model = view.getModel();
-                model.entrySet().stream().forEach(entry -> request.setAttribute(entry.getKey(), entry.getValue()));
+                model.forEach(request::setAttribute);
                 request.getRequestDispatcher(ConfigHelper.getJspPath() + path).forward(request, response);
             }
         }
     }
 
-    private void handleDataResult(View data,  HttpServletResponse response) throws IOException {
+    private void handleDataResult(Data data,  HttpServletResponse response) throws IOException {
         Object model = data.getModel();
         if (model != null) {
             response.setContentType("application/json");
