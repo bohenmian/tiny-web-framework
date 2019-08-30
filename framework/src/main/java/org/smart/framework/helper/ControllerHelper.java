@@ -6,7 +6,7 @@ import org.smart.framework.annotation.RequestMapping;
 import org.smart.framework.bean.Handler;
 import org.smart.framework.bean.Request;
 
-import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -18,21 +18,17 @@ public class ControllerHelper {
     static {
         Set<Class<?>> controllerClassSet = ClassHelper.getControllerClassSet();
         if (CollectionUtils.isNotEmpty(controllerClassSet)) {
-            for (Class<?> controllerClass : controllerClassSet) {
-                Method[] methods = controllerClass.getDeclaredMethods();
-                if (ArrayUtils.isNotEmpty(methods)) {
-                    for (Method method : methods) {
-                        if (method.isAnnotationPresent(RequestMapping.class)) {
-                            RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
-                            String requestPath = requestMapping.value();
-                            String requestMethod = requestMapping.method().name();
-                            Request request = new Request(requestPath, requestMethod);
-                            Handler handler = new Handler(controllerClass, method);
-                            HANDLER_MAP.put(request, handler);
-                        }
-                    }
+            controllerClassSet.forEach(controllerClass -> {
+                if (ArrayUtils.isNotEmpty(controllerClass.getDeclaredMethods())) {
+                    Arrays.stream(controllerClass.getDeclaredMethods())
+                            .filter(method -> method.isAnnotationPresent(RequestMapping.class))
+                            .forEach(method -> {
+                                RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+                                HANDLER_MAP.put(new Request(requestMapping.value(), requestMapping.method().name()),
+                                        new Handler(controllerClass, method));
+                            });
                 }
-            }
+            });
         }
     }
 

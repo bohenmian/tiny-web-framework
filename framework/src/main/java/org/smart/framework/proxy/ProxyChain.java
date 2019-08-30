@@ -43,7 +43,7 @@ public class ProxyChain {
         return methodProxy;
     }
 
-    public Object getMethodParams() {
+    public Object[] getMethodParams() {
         return methodParams;
     }
 

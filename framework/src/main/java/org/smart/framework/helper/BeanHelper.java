@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class BeanHelper {
 
+    // BEAN_MAP是一个容器,记录项目所有的bean实例
     private static final Map<Class<?>, Object> BEAN_MAP = new HashMap<>();
 
     static {
@@ -23,5 +24,9 @@ public class BeanHelper {
             throw new RuntimeException("can not get bean by class " + cls);
         }
         return (T) BEAN_MAP.get(cls);
+    }
+
+    public static void setBean(Class<?> cls, Object object) {
+        BEAN_MAP.put(cls, object);
     }
 }
