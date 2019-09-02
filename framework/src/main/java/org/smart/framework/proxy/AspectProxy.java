@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 
-public class AspectProxy implements Proxy {
+public abstract class AspectProxy implements Proxy {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AspectProxy.class);
 
