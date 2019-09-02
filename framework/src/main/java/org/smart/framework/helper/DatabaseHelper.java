@@ -149,4 +149,48 @@ public final class DatabaseHelper {
         String sql = "DELETE FROM " + entityClass.getSimpleName() + " WHERE id = ?";
         return update(sql, id) == 1;
     }
+
+    public static void beginTransaction() {
+        Connection connection = getConnection();
+        if (connection != null) {
+            try {
+                connection.setAutoCommit(false);
+            } catch (SQLException e) {
+                LOGGER.error("begin transaction failure", e);
+                throw new RuntimeException(e);
+            } finally {
+                CONNECTION_HOLDER.set(connection);
+            }
+        }
+    }
+
+    public static void commitTransaction() {
+        Connection connection = getConnection();
+        if (connection != null) {
+            try {
+                connection.commit();
+                connection.close();
+            } catch (SQLException e) {
+                LOGGER.error("commit transaction failure", e);
+                throw new RuntimeException(e);
+            } finally {
+                CONNECTION_HOLDER.remove();
+            }
+        }
+    }
+
+    public static void rollbackTransaction() {
+        Connection connection = getConnection();
+        if (connection != null) {
+            try {
+                connection.rollback();
+                connection.close();
+            } catch (SQLException e) {
+                LOGGER.error("rollback transaction failure");
+                throw new RuntimeException(e);
+            } finally {
+                CONNECTION_HOLDER.remove();
+            }
+        }
+    }
 }

@@ -3,8 +3,11 @@ package org.smart.framework.helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.smart.framework.annotation.Aspect;
+import org.smart.framework.annotation.Service;
+import org.smart.framework.annotation.Transaction;
 import org.smart.framework.proxy.AspectProxy;
 import org.smart.framework.proxy.Proxy;
+import org.smart.framework.proxy.ProxyFactory;
 import org.smart.framework.util.ClassUtil;
 
 import java.util.*;
@@ -17,6 +20,7 @@ public final class AopHelper {
         try {
             Map<Class<?>, Set<Class<?>>> aspectMap = createAspectMap();
             Map<Class<?>, List<Proxy>> targetMap = createTargetMap(aspectMap);
+            targetMap.forEach((key, value) -> BeanHelper.setBean(key, ProxyFactory.createProxy(key, value)));
         } catch (Exception e) {
             LOGGER.error("aop failure", e);
         }
@@ -44,7 +48,13 @@ public final class AopHelper {
     private static Map<Class<?>, Set<Class<?>>> createAspectMap() {
         Map<Class<?>, Set<Class<?>>> aspectMap = new HashMap<>();
         addAspectProxy(aspectMap);
+        addTransactionProxy(aspectMap);
         return aspectMap;
+    }
+
+    private static void addTransactionProxy(Map<Class<?>, Set<Class<?>>> aspectMap) {
+        Set<Class<?>> classSet = ClassHelper.getClassSetByAnnotation(Service.class);
+        aspectMap.put(Transaction.class, classSet);
     }
 
     private static void addAspectProxy(Map<Class<?>, Set<Class<?>>> aspectMap) {
